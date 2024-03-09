@@ -85,8 +85,15 @@ void json_uri::update(const std::string &uri)
 			else if (pos == 0) { // the URL contained only a path and the current path has no / at the end, strip last element until / and append
 				auto last_slash = path_.rfind('/');
 				path_ = path_.substr(0, last_slash) + '/' + path;
-			} else // otherwise it is a subfolder
+			} else { // otherwise it is a subfolder or file
+				// Remove any file off the end of the current path - considering that it might just be a file name.
+				auto last_slash = path_.rfind('/');
+				if (last_slash != std::string::npos)
+          path_ = path_.substr(0, last_slash + 1);
+				else
+					path_ = "";
 				path_.append(path);
+			}
 		}
 	}
 
